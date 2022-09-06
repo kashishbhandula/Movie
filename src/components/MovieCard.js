@@ -1,6 +1,11 @@
 import React from "react";
 
 class MovieCard extends React.Component {
+  constructor(props) {
+    
+    super(props);
+   
+  }
   render() {
     const { movie } = this.props;
     return (

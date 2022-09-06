@@ -3,9 +3,7 @@ import Navbar from "./Navbar";
 import MovieCard from "./MovieCard";
 import React from "react";
 
-class App extends React.Component {
-  
-  
+class App extends React.Component() {
 
   componentDidMount() {
     const { store } = this.props;
@@ -16,14 +14,13 @@ class App extends React.Component {
     });
 
     store.dispatch({
-      type: "ADD_MOVIES",
+      type: 'ADD_MOVIES',
       movies: data,
     });
-    console.log('State',this.props.store.getState());
   }
   render() {
     const movies = this.props.store.getState();
-    console.log("Render");
+
     return (
       <div className="App">
         <Navbar />
