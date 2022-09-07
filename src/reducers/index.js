@@ -64,11 +64,15 @@ const initialRootState={
 
 }
 
-export default function rootReducer(state=initialRootState, action) {
-  return {
+// export default function rootReducer(state=initialRootState, action) {
+//   return {
 
-    movies: movies(state.movies,action),
-    search: search(state.search,action)
+//     movies: movies(state.movies,action),
+//     search: search(state.search,action)
 
-  };
-}
+//   };
+// }
+export default combineReducers({
+  movies: movies,
+  search: search
+});
