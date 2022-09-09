@@ -6,19 +6,31 @@ import "./index.css";
 import App from "./components/App";
 import rootReducer from "./reducers";
 
-const logger = function ({ dispatch, getState }) {
-  return function (next) {
-    return function (action) {
-      // middleware code
-      console.log("ACTION_TYPE=", action.type);
-      next(action);
-    };
-  };
+// const logger = function ({ dispatch, getState }) {
+//   return function (next) {
+//     return function (action) {
+//       // middleware code
+//       console.log("ACTION_TYPE=", action.type);
+//       next(action);
+//     };
+//   };
+// };
+const logger = ({ dispatch, getState }) => (next) => (action) => {
+  console.log("ACTION_TYPE=", action.type);
+  next(action);
+};
+const thunk = ({ dispatch, getState }) => (next) => (action) => {
+  if(typeof action==='function')
+  {
+    action(dispatch);
+    return
+  }
+  next(action);
 };
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger,thunk),
 });
 //  console.log("Before store ", store.getState());
 //  store.dispatch({
