@@ -50,10 +50,19 @@ const store = configureStore({
 const root = ReactDOM.createRoot(document.getElementById("root"));
 export const StoreContext = createContext();
 // console.log('StoreContext');
+class Provider extends React.Component {
+  render() {
+    return (
+      <StoreContext.Provider value={this.props.store}>
+        {this.props.children}
+      </StoreContext.Provider>
+    );
+  }
+}
 root.render(
   <React.StrictMode>
-    <StoreContext.Provider value={store}>
-      <App store={store} />
-    </StoreContext.Provider>
+    <Provider store={store}>
+      <App store={store}/>
+    </Provider>
   </React.StrictMode>
 );

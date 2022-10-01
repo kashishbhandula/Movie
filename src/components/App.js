@@ -3,6 +3,7 @@ import Navbar from "./Navbar";
 import MovieCard from "./MovieCard";
 import React from "react";
 import { addMovies, setShowFavourites } from "../actions";
+import { StoreContext } from "../index";
 
 class App extends React.Component {
   componentDidMount() {
@@ -28,52 +29,56 @@ class App extends React.Component {
     this.props.store.dispatch(setShowFavourites(val));
   };
   render() {
-    const { movies ,search } = this.props.store.getState();
+    const { movies, search } = this.props.store.getState();
     const { list, favourites, showFavourites } = movies;
-    {console.log(list)}
+    {
+      console.log(list);
+    }
     const displayMovies = showFavourites ? favourites : list;
     console.log("Render");
     return (
-      <div className="App">
-        <Navbar 
-        search={search}
-        dispatch={this.props.store.dispatch}
-        
-        />
-        <div className="main">
-          <div className="tabs">
-            <div
-              className={`tab ${showFavourites}?'':'active-tabs'`}
-              onClick={() => this.onChangeTab(false)}
-            >
-              Movies
+      <StoreContext.Consumer>
+        {(store) => {
+          return (
+            <div className="App">
+              <Navbar search={search} dispatch={store.dispatch} />
+              <div className="main">
+                <div className="tabs">
+                  <div
+                    className={`tab ${showFavourites}?'':'active-tabs'`}
+                    onClick={() => this.onChangeTab(false)}
+                  >
+                    Movies
+                  </div>
+                  <div
+                    className={`tab ${showFavourites}?'active-tabs':''`}
+                    onClick={() => this.onChangeTab(true)}
+                  >
+                    Favourite
+                  </div>
+                </div>
+                <div className="list">
+                  {displayMovies.map((movie, index) => {
+                    return (
+                      <MovieCard
+                        movie={movie}
+                        key={index}
+                        dispatch={store.dispatch}
+                        isFavourite={this.isMovieFavourite(movie)}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+              <div>
+                {displayMovies.length === 0 ? (
+                  <div className="no-movies">No Movies to display</div>
+                ) : null}
+              </div>
             </div>
-            <div
-              className={`tab ${showFavourites}?'active-tabs':''`}
-              onClick={() => this.onChangeTab(true)}
-            >
-              Favourite
-            </div>
-          </div>
-          <div className="list">
-            {displayMovies.map((movie, index) => {
-              return (
-                <MovieCard
-                  movie={movie}
-                  key={index}
-                  dispatch={this.props.store.dispatch}
-                  isFavourite={this.isMovieFavourite(movie)}
-                />
-              );
-            })}
-          </div>
-        </div>
-        <div>
-          {displayMovies.length === 0 ? (
-            <div className="no-movies">No Movies to display</div>
-          ) : null}
-        </div>
-      </div>
+          );
+        }}
+      </StoreContext.Consumer>
     );
   }
 }
