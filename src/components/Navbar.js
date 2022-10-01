@@ -1,5 +1,6 @@
 import React from "react";
-import { handleMovieSearch,addMovieToList} from "../actions";
+import { StoreContext } from "..";
+import { handleMovieSearch, addMovieToList } from "../actions";
 
 class Navbar extends React.Component {
   constructor(props) {
@@ -9,11 +10,10 @@ class Navbar extends React.Component {
       searchText: "",
     };
   }
-  handleAddToMovies=(movie)=>{
+  handleAddToMovies = (movie) => {
     // console.log("result11",movie);
     this.props.dispatch(addMovieToList(movie));
-    
-  }
+  };
   handleChange = (e) => {
     // const {search}=this.props;
     // console.log(search);
@@ -42,10 +42,10 @@ class Navbar extends React.Component {
           {showSearchResults && (
             <div className="search-results">
               <div className="search-result">
-                <img src={result.Poster} alt="search-pic"/>
+                <img src={result.Poster} alt="search-pic" />
                 <div className="movie-info">
                   <span>{result.Title}</span>
-                  <button onClick={()=>this.handleAddToMovies(result)}>
+                  <button onClick={() => this.handleAddToMovies(result)}>
                     Add To Movies
                   </button>
                 </div>
@@ -57,4 +57,15 @@ class Navbar extends React.Component {
     );
   }
 }
-export default Navbar;
+class NavbarWrapper extends React.Component {
+  render() {
+    return (
+      <StoreContext.Consumer>
+        {(store) => (
+          <Navbar dispatch={store.dispatch} search={this.props.search} />
+        )}
+      </StoreContext.Consumer>
+    );
+  }
+}
+export default NavbarWrapper;
