@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext } from "react";
 import ReactDOM from "react-dom/client";
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -15,22 +15,28 @@ import rootReducer from "./reducers";
 //     };
 //   };
 // };
-const logger = ({ dispatch, getState }) => (next) => (action) => {
-  console.log("ACTION_TYPE=", action.type);
-  next(action);
-};
-const thunk = ({ dispatch, getState }) => (next) => (action) => {
-  if(typeof action==='function')
-  {
-    action(dispatch);
-    return
-  }
-  next(action);
-};
+const logger =
+  ({ dispatch, getState }) =>
+  (next) =>
+  (action) => {
+    console.log("ACTION_TYPE=", action.type);
+    next(action);
+  };
+const thunk =
+  ({ dispatch, getState }) =>
+  (next) =>
+  (action) => {
+    if (typeof action === "function") {
+      action(dispatch);
+      return;
+    }
+    next(action);
+  };
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger,thunk),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(logger, thunk),
 });
 //  console.log("Before store ", store.getState());
 //  store.dispatch({
@@ -42,8 +48,12 @@ const store = configureStore({
 // console.log("hello");
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+export const StoreContext = createContext();
+// console.log('StoreContext');
 root.render(
   <React.StrictMode>
-    <App store={store} />
+    <StoreContext.Provider value={store}>
+      <App store={store} />
+    </StoreContext.Provider>
   </React.StrictMode>
 );
